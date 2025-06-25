@@ -21,5 +21,4 @@ from home.views import React
 urlpatterns = [
     path('admin/', admin.site.urls),
     re_path(r'^.*', React.as_view(), name='frontend'),  
-
 ]
