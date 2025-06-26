@@ -9,8 +9,9 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from telnetlib import AUTHENTICATION
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-gqr5w2y-nzo0+oj62n!$#6d$d_igd!ez--t=@3(k4+zl#fviig'
+SECRET_KEY = 'django-insecure-gqr5w2y-nzo0+oj62n!$#6d$d_igd!ez--t=@3(k4+zl#fviig'  # Store in environment variable
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -37,10 +38,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'corsheaders', # CORS headers for cross-origin requests
+    'ninja', # Django Ninja for building APIs
     'home'
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware", # CORS middleware to handle cross-origin requests
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -55,7 +59,7 @@ ROOT_URLCONF = 'app.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [str(BASE_DIR.joinpath('frontend'))],
+        'DIRS': [str(BASE_DIR.joinpath('frontend'))], # Directory for templates from react
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -100,7 +104,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
+AUTHENTICATION_BACKENDS = [
+    'auth.backends.CaseInsensitiveAuth',
+    'django.contrib.auth.backends.ModelBackend'
+]
+ 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -125,3 +133,21 @@ STATIC_ROOT = 'staticfiles/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# JWT SECRET KEY
+JWT_SECRET_KEY = "YOUR_JWT_SECRET" # Store in environment variable 
+
+# CORS SETTINGS
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000"
+]
+
+# To allow cross-origin requests on react frontend development server
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000"
+]

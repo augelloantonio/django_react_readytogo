@@ -192,11 +192,11 @@ urlpatterns = [
 
 ---
 
-## Next Steps & Enhancements
-Hit star button if you want also me to:
-- Integrate **Django-Ninja** for API creation.
-- Add **JWT authentication** for secure API access.
-- Implement React global state management;
+## On 26/06/2025 Implementated:
+- Integration of **Django-Ninja** for API creation.
+- **JWT authentication** for secure API access.
+-  React global state management.
+
 ---
 
 ## License
