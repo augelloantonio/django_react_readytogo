@@ -9,12 +9,9 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import ensure_csrf_cookie
 from django.middleware.csrf import get_token
 from django.contrib.auth.models import Permission
+from .utils import create_token
 
 router = Router()
-
-JWT_SECRET_KEY = settings.JWT_SECRET_KEY 
-
-print("AUTH CALLED")
 
 @router.get("/setCsrfToken")
 @ensure_csrf_cookie
@@ -24,7 +21,6 @@ def setCsrfToken(request):
     This endpoint is used to ensure that the CSRF token is set in the user's browser.
     """
 
-    print("INTO get_csrf_token")
     token = get_token(request)
     return JsonResponse({"csrf_token": token})
 
@@ -42,23 +38,8 @@ def login_user(request, data: LoginInput):
     
     if user is not None:        
         
-        # If the user is authenticated, create a payload for the JWT token.
-        user_obj = { 
-            "user_id": user.id,
-            "username": user.username,
-            "email": user.email
-        }
-        
-        payload = {
-            "user_id": user.id,
-            "exp": datetime.utcnow() + timedelta(hours=24),
-            "iat": datetime.utcnow(),
-            "user": user_obj
-        }
-
-       
-        token = jwt.encode(payload, JWT_SECRET_KEY, algorithm="HS256")
-        
+        token = create_token(user)
+               
         return {"success": True, "token": token}
     else:
         raise HttpError(401, "Invalid credentials")
